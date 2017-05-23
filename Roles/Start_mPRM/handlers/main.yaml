@@ -1,0 +1,3 @@
+---
+- name: Start mPRM
+  service: name=mprm state=started enabled=yes daemon_reload=yes

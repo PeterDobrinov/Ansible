@@ -1,0 +1,4 @@
+---
+- name: Install packages
+  include: "{{ ansible_pkg_mgr }}_installer.yaml"
+

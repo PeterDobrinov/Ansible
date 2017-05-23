@@ -1,0 +1,15 @@
+---
+
+- name: Add Oracle Java Repo
+  apt_repository:
+    repo: deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main
+    state: present
+
+- name: Add Oracle Repo key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: EEA14886
+
+- name: Install Oracle Java
+  apt: name=oracle-java8-installer update_cache=yes
+

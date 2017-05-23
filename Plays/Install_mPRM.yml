@@ -1,0 +1,6 @@
+---
+- hosts: test2
+  roles:
+    - Pre-Install
+#    - mPRM_Install
+    - Start_mPRM

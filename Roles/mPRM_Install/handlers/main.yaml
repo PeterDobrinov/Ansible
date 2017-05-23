@@ -1,0 +1,7 @@
+---
+- name: Start mPRM
+  service: name=mprm state=started enabled=yes daemon_reload=yes
+
+- name: Start SSH
+  service: name=ssh state=started
+  when: ssh_state.status.ActiveState == "active"

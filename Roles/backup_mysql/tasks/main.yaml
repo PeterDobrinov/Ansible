@@ -1,0 +1,6 @@
+---
+- name: Backup MySQL
+  become: yes
+  become_user: root
+  become_method: sudo
+  mysql_db: state=dump name=mprm target=/tmp/mprm.sql

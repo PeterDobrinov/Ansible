@@ -1,0 +1,28 @@
+---
+- name: Create the path for the java connectors
+  file:
+    path: /opt/mPRM6.0/lib/thirdparty/
+    state: directory
+    owner: mprm
+    group: mprm
+    recurse: yes
+
+- name: Install the Oracle java connector
+  copy:
+    src: /home/peter/Ansible/Repo/ojdbc7.jar
+    dest: /opt/mPRM6.0/lib/thirdparty/ojdbc7.jar
+    owner: mprm
+    group: mprm
+
+- name: Install MySQL java connector
+  apt:
+    name: libmysql-java
+    update_cache: yes
+
+- name: Symlink the MySQL java connector
+  file:
+    path: /opt/mPRM6.0/lib/thirdparty/mysql-connector-java.jar
+    src: /usr/share/java/mysql-connector-java.jar
+    state: link
+    owner: mprm
+    group: mprm

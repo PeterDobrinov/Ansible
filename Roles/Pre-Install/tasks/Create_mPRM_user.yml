@@ -1,0 +1,11 @@
+---
+- name: Create mPRM group
+  group:
+    name: mprm
+
+- name: Create mPRM User
+  user:
+    name: mprm
+    group: mprm
+    home: /opt/mPRM6.0
+    shell: /usr/sbin/nologin 

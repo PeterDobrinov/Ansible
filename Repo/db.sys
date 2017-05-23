@@ -1,0 +1,11 @@
+#mPRM Properties File
+url=jdbc\:h2\:h2db/mprm;DEFAULT_LOCK_TIMEOUT\=30000
+connectionLimit=10
+roConnectionLimit=100
+system.database=true
+dbserver.name=System Database Server
+user=sa
+statementLimit=100
+password=
+dbserver.type=JDBC
+driver=org.h2.Driver

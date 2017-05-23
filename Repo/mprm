@@ -1,0 +1,145 @@
+#!/bin/sh
+
+# ----------Configuration----------
+# here you may set the path to the folder the java is located followed by '/' - for instance "/opt/jvm/jdk1.6/bin/".
+# If the java from the PATH should be used - left it as it is
+JAVA_BIN=
+
+# jvm options
+JVM_OPTIONS="-mx512M -XX:MaxPermSize=256M -Xbootclasspath/a:../../lib/org.apache.servicemix.bundles.jaxb-impl.jar -Dsun.locale.formatasdefault=true -XX:+HeapDumpOnOutOfMemoryError"
+
+# here you may set the system properties you wish to be passed to JVM as java(w) process arguments
+SYS_PROPS=-Djava.security.egd=file:///dev/urandom
+
+# change the launcher configuration if you don't want to use default one
+LAUNCH_OPTIONS="-Dmprm.control.host=localhost -Dmprm.control.port=48888 -Dmprm.control.timeout=600000"
+
+# here the work dir is specified
+WORK_DIR=.
+
+# here the log dir is specified
+LOG_DIR=.
+
+# here you may change the output file of this script
+LOG_FILE=$LOG_DIR/cmd.log
+
+# here you may extend the classpath with some entries
+EXT_CLASSPATH=/opt/mPRM6.0/lib/thirdparty/mysql-connector-java-5.1.42-bin.jar
+
+# here you may change the prs files
+PRS_FILES="default.prs;common.prs"
+
+# YOU SHOULD NOT EDIT THE SCRIPT!
+# --------------------------------
+
+# change to the script directory
+SCRIPT_DIR=$(dirname $0)
+cd $SCRIPT_DIR
+
+cd mserver
+
+mkdir -p $LOG_DIR
+mkdir -p $WORK_DIR
+
+TRIM=
+trim() {
+  TRIM=$1
+  while :
+  do
+    case $TRIM in
+      \ *) 
+        TRIM=${TRIM#?}
+        ;;
+      *\ ) 
+        TRIM=${TRIM%?} 
+        ;;
+      *) break 
+        ;;
+    esac
+  done
+}
+
+#initiate some set of variables
+SERVER_CLASS_PATH=../../lib/server.jar
+CLASS_PATH=$SERVER_CLASS_PATH:$EXT_CLASSPATH
+OPTIONS="$JVM_OPTIONS -Dmbs.prs.name=$PRS_FILES -Dmbs.log.errorlevel=false $SYS_PROPS"
+trim "$JAVA_BIN"
+JAVA_BIN=$TRIM
+JAVA_EXEC="$JAVA_BIN"java
+JAVA_OPT=
+JAVA_BIN=
+STATUS=
+
+start() {
+  JAVA_OPT="$OPTIONS $LAUNCH_OPTIONS -classpath $CLASS_PATH com.prosyst.mprm.control.Control start"  
+  echo "$JAVA_EXEC" $JAVA_OPT
+  echo Command Line: > $LOG_FILE
+  echo "$JAVA_EXEC" $JAVA_OPT >> $LOG_FILE
+  "$JAVA_EXEC" $JAVA_OPT
+  STATUS=$?
+}
+
+transparent() {
+  JAVA_OPT="-classpath $SERVER_CLASS_PATH $LAUNCH_OPTIONS com.prosyst.mprm.control.Control $1"
+  echo "$JAVA_EXEC" $JAVA_OPT
+  echo Command Line: > $LOG_FILE
+  echo "$JAVA_EXEC" $JAVA_OPT >> $LOG_FILE
+  "$JAVA_EXEC" $JAVA_OPT
+  STATUS=$?
+}
+
+case "$1" in
+
+  '' | 'console' | 'start')
+    start
+
+    while [ $STATUS = 23 ] || [ $STATUS = 24 ]
+    do
+      echo Exit status: $STATUS
+      # the process was stopped as a part of restart, start anew
+      start
+    done
+
+    ;;
+  *)
+    transparent $1
+    ;;
+esac
+
+echo Exit status: $STATUS
+
+#end
+
+cd ..
+
+echon() { 
+  if [ -n "`echo -n`" ] ; then 
+    echo "$@\c" 
+  else 
+    echo -n "$@" 
+  fi 
+}
+
+msgAndPressAnyKey() {
+  echon "$1"
+  TTYSTATE=`stty -g` 
+  stty raw 
+  dd if=/dev/tty of=/dev/null bs=1 count=1 > /dev/null 2>&1 
+  stty "$TTYSTATE" 
+  echo 
+}
+
+if [ $STATUS = 0 ]; then 
+  exit $STATUS
+else 
+  case "$1" in
+
+    'console')
+      msgAndPressAnyKey "Process exited with an error. Press enter to continue ..." && exit $STATUS
+      ;;
+    *)
+      exit $STATUS
+      ;;
+  esac
+fi
+

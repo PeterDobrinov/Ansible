@@ -1,0 +1,9 @@
+---
+- name: Get mPRM service state
+  service: name=mprm
+  register: mprm_state
+
+- name: Start mPRM service if not started
+  command: echo ""
+  when: mprm_state.status.ActiveState != "active"
+  notify: Start mPRM

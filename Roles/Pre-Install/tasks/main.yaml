@@ -1,0 +1,30 @@
+---
+- name: Create User mPRM
+  include: Create_mPRM_user.yml
+
+- name: Install Zip
+  apt: name=zip update_cache=yes
+
+- name: Inztall Unzip
+  apt: name=zip update_cache=yes
+
+- name: Install VIM
+  apt: name=vim update_cache=yes
+
+- name: Install NTP
+  apt: name=ntp update_cache=yes
+
+- name: Install NTPdate
+  apt: name=ntpdate update_cache=yes
+
+- name: Install Ansible
+  include: Install_Ansible.yml
+
+- name: Install Oracle Java
+  include: Install_Oracle_Java.yml
+
+- name: Install Java Connectors
+  include: Install_Java_Connectors.yml
+  
+
+

@@ -1,0 +1,25 @@
+---
+- name: Install VIM
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt: name=vim update_cache=yes
+  become: yes
+  become_method: sudo
+
+- name: Check if MySQL is installed
+  command: apt-cache policy mysql-server
+  register: apt_mysql_check
+
+#- debug: msg={{apt_mysql_check}}
+
+- name: Install MySQL if it is not present
+  command: echo ""
+  when: "'Installed: (none)' in apt_mysql_check.stdout" 
+#  when: "apt_mysql_check.stdout.find('Installed: (none)')" != -1
+  notify: 
+  - Install MySQL
+  - copy .my.cnf
+  - mysql root password
+  - Start MySQL
+

@@ -1,0 +1,24 @@
+---
+- name: Extract the mPRM
+  unarchive: src=/home/peter/Install/mPRM6.0.zip dest=/opt/
+
+- name: Change the mPRM folder owner
+  file: path=/opt/mPRM6.0/ owner=mprm group=mprm recurse=yes
+
+- name: Copy the mPRM start script
+  copy: src=/home/peter/Ansible/Repo/mprm dest=/opt/mPRM6.0/bin/ mode=755
+
+- name: Copy the database config file
+  copy: src=/home/peter/Ansible/Repo/db.sys dest=/opt/mPRM6.0/bin/mserver/
+
+- name: Configure mprm.service in systemd
+  template: src=/home/peter/Ansible/Repo/mprm.service dest=/etc/systemd/system/mprm.service
+
+- name: Reload systemd and make sure mprm is stopped
+  systemd:
+    state: stopped
+    daemon_reload: yes
+    name: mprm
+
+#- user: name=mprm shell=/sbin/nologin home=/opt/mPRM6.0/
+

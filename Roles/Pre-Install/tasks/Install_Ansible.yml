@@ -1,0 +1,18 @@
+---
+
+- name: Add software-properties-common
+  apt: name=software-properties-common update_cache=yes
+
+- name: Add Ansible Repo
+  apt_repository:
+    repo: deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main
+    state: present
+
+- name: Add Ansible Key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 93C4A3FD7BB9C367
+
+- name: Install Ansible
+  apt: name=ansible update_cache=yes
+

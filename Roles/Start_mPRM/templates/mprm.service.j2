@@ -1,0 +1,13 @@
+[Unit]
+Description=mPRM service
+After=syslog.target network.target nss-lookup.target
+
+[Service]
+Type=simple
+ExecStart=/opt/mPRM6.0/bin/mprm
+ExecReload=/opt/mPRM.0/bin/mprm restart
+ExecStop=/opt/mPRM6.0/bin/mprm stop
+
+[Install]
+WantedBy=multi-user.target
+
