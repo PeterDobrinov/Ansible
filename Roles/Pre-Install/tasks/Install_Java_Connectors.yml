@@ -9,7 +9,7 @@
 
 - name: Install the Oracle java connector
   copy:
-    src: /home/peter/Ansible/Repo/ojdbc7.jar
+    src: "{{repo.src}}/ojdbc7.jar"
     dest: /opt/mPRM6.0/lib/thirdparty/ojdbc7.jar
     owner: mprm
     group: mprm

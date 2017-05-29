@@ -1,4 +1,14 @@
 ---
+- name: Include Vars
+  include_vars:
+    file: default.yaml
+
+- name: Debug kyp
+  debug:
+    #msg: Hello world!
+    var: repo
+    #verbosity: 
+
 - name: Create User mPRM
   include: Create_mPRM_user.yml
 

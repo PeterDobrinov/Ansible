@@ -1,4 +1,5 @@
 ---
+
 - name: Install MySQL
   become: yes
   become_user: root
@@ -14,7 +15,7 @@
   become_user: root
   become_method: sudo
   template: 
-    src: /home/peter/Ansi_Repo/.my.cnf
+    src: "{{repo.src}}/.my.cnf"
     dest: ~/.my.cnf
     owner: root
     mode: 0600
